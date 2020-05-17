@@ -1,79 +1,113 @@
 import React, {Component} from 'react';
 import "./TodoList.css";
-import InputBar from "./InputBar";
-import TodoFilters from "./TodoFilters";
-import TodoItem from "./TodoItem";
+import TodoFilters from "../TodoFilters/TodoFilters";
+import InputBar from "../InputBar/InputBar";
+import TodoItem from "../TodoItem/TodoItem";
 
-class TodoList extends Component {
+export default class TodoList extends Component {
 
     constructor() {
         super();
-        this.count = 100;
+        this.genId = 100
     }
 
-    state = {
-        todos: [
-            {label: "Do homework", id: 1, isDone: false},
-            {label: "Play guitar", id: 2, isDone: false},
-            {label: "Learn react", id: 3, isDone: false}
-        ]
+    createTodo = (label) => {
+        return {label, id: this.genId++, isDone: false, isImportant: false};
     };
 
+    state = {
+        todos: [],
+        term: '',
+        filter: 'all'
+    };
+
+    toggleProperty = (arr, id, propName) => {
+        const index = arr.findIndex((el) => el.id === id);
+
+        const oldItem = arr[index];
+        const newItem = {...oldItem, [propName]: !oldItem[propName]};
+
+        return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)]
+    };
     deleteTodo = (id) => {
         this.setState(({todos}) => {
             const index = todos.findIndex((el) => el.id === id);
             const newTodos = [...todos.slice(0, index), ...todos.slice(index + 1)];
-
-            return {
-                todos: newTodos
-            }
+            return {todos: newTodos}
         })
     };
-
-    addTodo = (label) => {
-      this.setState(({todos}) => {
-          const newTodo = {label: label, id: this.count++, isDone: false};
-          return {
-              todos: [...todos, newTodo]
-          }
-      })
-    };
-
-    toggleTodo = (id) => {
+    addTodo = (text) => {
         this.setState(({todos}) => {
-            const index = todos.findIndex((el) => el.id === id);
-
-            const oldItem = todos[index];
-            const newItem = {...oldItem, isDone: !oldItem.isDone};
-
-            return {
-                todos: [
-                    ...todos.slice(0, index),
-                    newItem,
-                    ...todos.slice(index + 1)]
-            }
+            const newTodo = this.createTodo(text);
+            return {todos: [...todos, newTodo]}
         })
     };
+    toggleDoneTodo = (id) => {
+        this.setState(({todos}) => {
+            return {todos: this.toggleProperty(todos, id, 'isDone')}
+        })
+    };
+    toggleImportantTodo = (id) => {
+        this.setState(({todos}) => {
+            return {todos: this.toggleProperty(todos, id, 'isImportant')}
+        })
+    };
+    onSearchChange = (term) => {
+        this.setState({term})
+    };
+    onFilterChange = (filter) => {
+        this.setState({filter})
+    };
+    search = (arr, term) => {
+        if (term.length === 0) return arr;
+        return arr.filter(item => {
+            return item.label.indexOf(term) > -1;
+        })
+    };
+    filter(arr, filter){
+        switch (filter) {
+            case 'all':
+                return arr;
+            case 'active':
+                return arr.filter(item => !item.isDone);
+            case 'done':
+                return arr.filter(item => item.isDone);
+            default:
+                return arr;
+        }
+    }
 
     render() {
+        const {todos, term, filter} = this.state;
+        let doneCount = todos.filter(item => item.isDone).length;
+        let todosCount = todos.length - doneCount;
+        const visibleItems = this.filter(this.search(todos, term), filter);
         return (
-            <div className="container d-flex justify-content-center">
-                <div className="col-lg-8">
-                        <TodoFilters/>
-                        <InputBar todos={this.state.todos} onAddTodo={this.addTodo}/>
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div className="col-lg-8">
+                        <TodoFilters doneCount={doneCount}
+                                     todosCount={todosCount}
+                                     onSearchChange={this.onSearchChange}
+                                     onFilterChange={this.onFilterChange}
+                                     term={term}
+                                     filter={filter}
+
+                        />
+                        <InputBar todos={visibleItems} onAddTodo={this.addTodo}/>
 
                         <ul className="list-group todo-list">
                             {
-                                this.state.todos.map(todos => <TodoItem onDeleteTodo={this.deleteTodo}
-                                                                        onToggleTodo={this.toggleTodo}
-                                                                        key={todos.id}
-                                                                        todos={todos}/>)
+                                visibleItems.map(todos => <TodoItem onDeleteTodo={this.deleteTodo}
+                                                                    onToggleDoneTodo={this.toggleDoneTodo}
+                                                                    onToggleImportantTodo={this.toggleImportantTodo}
+                                                                    key={todos.id}
+                                                                    todos={todos}/>)
                             }
                         </ul>
+                    </div>
                 </div>
             </div>
         )
     }
 }
-
-export default TodoList;

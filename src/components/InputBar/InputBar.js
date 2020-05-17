@@ -5,16 +5,20 @@ const InputBar = (props) => {
     const [label, setLabel] = useState('');
 
     return (
-        <form className="input-group mb-3 input-bar">
+        <form onSubmit={e => {
+            e.preventDefault();
+            props.onAddTodo(label);
+            setLabel(e.currentTarget.value = '')
+        }} className="input-group mb-3 input-bar">
             <input
                 value={label}
                 onChange={(e) => setLabel(e.currentTarget.value)}
                 type="text"
-                placeholder="Enter the text"
+                placeholder="What's need todo?"
                 className="form-control"/>
             <div className="input-group-append">
-                <button onClick={() => props.onAddTodo(label)} className="btn btn-outline-secondary"
-                        type="button" id="button-addon2">
+                <button  className="btn btn-outline-secondary"
+                        id="button-addon2">
                     Add todo
                 </button>
             </div>

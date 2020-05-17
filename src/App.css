@@ -1,38 +1,48 @@
 .App {
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Jost', sans-serif;
+    padding: 30px 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/*.search {*/
+/*    width: 300px;*/
+/*}*/
+
+.header {
+    padding-bottom: 7px;
+    text-transform: uppercase;
+    /*color: dodgerblue;*/
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.important-btn {
+    padding: 6px 16px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.header-title {
+    color: white;
+    /*border: 1px solid black;*/
+    padding: 5px 298px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    /*background-color: rgb(30, 144, 255);*/
 }
 
-.App-link {
-  color: #61dafb;
+.isDone {
+    text-decoration: line-through;
+    position: relative;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.isImportant {
+    font-weight: bold;
+    color: dodgerblue;
+}
+
+.todo-filters {
+    text-align: center;
+}
+
+.todo-item-label {
+    cursor: pointer;
 }
