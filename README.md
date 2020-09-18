@@ -1,11 +1,12 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## About project
+### About project
+***
 Simple react TODOS applicatioon :bookmark_tabs:
 ![alt text](todo-github.jpg "todo-app image")
-## Used stack
+### Used
+***
 * React
-## Available Scripts
-In the project directory, you can run:
-### `npm start`
+### How to start project?
+***
+1. install packages ```npm install ```
+2. run the command ```npm start ```
 
